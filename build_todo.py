@@ -5,6 +5,7 @@ import os
 from langchain_groq import ChatGroq
 from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage, BaseMessage, SystemMessage, AIMessage
+from langchain_core.prompts import ChatPromptTemplate, FewShotChatMessagePromptTemplate
 from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode
@@ -27,7 +28,7 @@ def write_markdown(content: str) -> str:
         :param content: LLM generated content
         :return: str
         """
-    with open("TODO.md","w") as md:
+    with open("TODO.md", "w") as md:
         md.write(content)
 
     return "content written!"
@@ -40,6 +41,24 @@ class AgentState(TypedDict):
         Sequence[BaseMessage], add_messages
     ]
 
+def create_few_shot_temp() -> FewShotChatMessagePromptTemplate:
+    pre_prompt = ChatPromptTemplate.from_messages([
+        ("user", "{prompt}"),
+        ("assistant", "{output}")
+    ])
+
+    example_prompt, example_response = get_sample_prompt_response()
+    few_shot_prompt = FewShotChatMessagePromptTemplate(
+        example_prompt=pre_prompt,
+        examples=[
+            {
+                "prompt": example_prompt,
+                "output": example_response
+            }
+        ]
+    )
+    return few_shot_prompt
+
 def model_call(state: AgentState) -> AgentState:
     example_prompt, example_response = get_sample_prompt_response()
     sys_msg = SystemMessage(content = f"""
@@ -50,24 +69,18 @@ def model_call(state: AgentState) -> AgentState:
         You have one tool: write_markdown
         Never call any other tool
         
-        Other agent has these tools: read_markdown, write_content, write_paragraph, write_bullet_points, write_ordered_list, write_table, save_doc
-            write_paragraph: write only paragraph to the document
-            write_bullet_points: add bullet points in the document
-            write_ordered_list: add order points in the document
-            write_table: add a table in the document
-            save_doc: save the doc
-        You are supposed to give instructions to the agent when to call which tool      
-        
         example prompt: {example_prompt}
         example response: {example_response}
         
         Do not search the web for any data, just answer with your knowledge.
-        
-        You are expected to return markdown formatted content
+        Do not write the content for the word doc. Just refer the example prompt-response pair
     """)
+
     response = llm.invoke(
         [sys_msg] + state["messages"]
     )
+    # print(response.content)
+    # print(response.tool_calls)
     return dict(
         messages = [response]
     )
