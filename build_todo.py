@@ -24,7 +24,7 @@ llm = ChatGroq(
 @tool
 def write_markdown(content: str) -> str:
     """
-        Writes LLM generated content in a md file
+        Writes LLM generated todo list content in a md file
         :param content: LLM generated content
         :return: str
         """
@@ -40,24 +40,6 @@ class AgentState(TypedDict):
     messages: Annotated[
         Sequence[BaseMessage], add_messages
     ]
-
-def create_few_shot_temp() -> FewShotChatMessagePromptTemplate:
-    pre_prompt = ChatPromptTemplate.from_messages([
-        ("user", "{prompt}"),
-        ("assistant", "{output}")
-    ])
-
-    example_prompt, example_response = get_sample_prompt_response()
-    few_shot_prompt = FewShotChatMessagePromptTemplate(
-        example_prompt=pre_prompt,
-        examples=[
-            {
-                "prompt": example_prompt,
-                "output": example_response
-            }
-        ]
-    )
-    return few_shot_prompt
 
 def model_call(state: AgentState) -> AgentState:
     example_prompt, example_response = get_sample_prompt_response()
@@ -109,15 +91,14 @@ graph.add_edge("tool_node", END)
 
 app = graph.compile()
 
-while True:
-    user_input = input("Enter: ")
-    if user_input.strip() == "q":
-        break
+user_input = """
+We are planning an Agentic AI project that builds word documents based on plain human prompts. The app will take user prompt, this prompt will be sent to LLMs that will generate the task (for subsequent LLM) and finally create the word doc. Please help us create a word doc for this
+"""
 
-    try:
-        app.invoke(dict(
-            messages=[("user", user_input)]
-        ))
-        print("TODO generated!")
-    except Exception as err:
-        print(f"[ERR]: {str(err)}")
+try:
+    app.invoke(dict(
+        messages=[("user", user_input)]
+    ))
+    print("TODO generated!")
+except Exception as err:
+    print(f"[ERR]: {str(err)}")
