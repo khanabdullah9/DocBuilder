@@ -5,6 +5,8 @@ from langchain_core.tools import tool
 from docx import Document
 from docx.shared import Pt
 
+from vec_search import vector_store
+
 GLOBAL_DOC = Document()
 DOC_PATH = os.path.join("generated","demo.docx")
 
@@ -100,3 +102,20 @@ def read_markdown() -> str:
     with open(os.path.join("task","TODO.md"), "r") as md:
         content = md.read()
     return content
+
+@tool
+def invoke_rag(prompt: str) -> List[str]:
+    """
+    Invokes a RAG pipeline
+    :param prompt: LLM generated prompt
+    :return: retrieved context
+    """
+    results = vector_store.similarity_search(
+        prompt,
+        k=3
+    )
+
+    if not results:
+        return []
+
+    return [doc.page_content for doc in results]

@@ -9,7 +9,6 @@ from langchain_core.messages import HumanMessage, BaseMessage, SystemMessage, AI
 from langgraph.graph.message import add_messages
 
 
-
 from doc_tools import *
 from utils import get_sample_prompt_response
 
@@ -23,7 +22,7 @@ llm = ChatGroq(
 )
 
 tools_list = [write_markdown, read_markdown,
-              write_paragraph, write_header, write_sub_header, write_bullet_points,write_ordered_list, save_doc]
+              write_paragraph, write_header, write_sub_header, write_bullet_points,write_ordered_list, save_doc, invoke_rag]
 llm = llm.bind_tools(tools_list)
 
 
@@ -79,6 +78,7 @@ def generate_doc(state: AgentState) -> AgentState:
             write_sub_header: adds a sub header (use this for the sub sections)
             write_bullet_points: add bullet points in the document
             write_ordered_list: add order points in the document
+            invoke_rag: if the user has uploaded a PDF file then call this tool and retrieve the context
             save_doc: save the doc
         Never call any other tool.
         Read the instructions, generate content and call the appropriate tool
@@ -100,6 +100,12 @@ def should_continue(state: AgentState) -> str:
     if isinstance(messages, AIMessage) and messages.tool_calls:
         return "tool_node"
     return "stop"
+
+def should_rag(state: AgentState) -> str:
+    messages = state["messages"][-1]
+    if isinstance(messages, AIMessage) and messages.tool_calls:
+        return "RAG"
+    return "skip"
 
 graph = StateGraph(AgentState)
 

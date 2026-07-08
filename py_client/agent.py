@@ -7,12 +7,14 @@ prompts = {
 
     3: """We are planning to build a Smart Inventory Management System for retail stores. Create a professional project proposal that includes an executive summary, project objectives, key features, technology stack, implementation timeline, expected benefits, and conclusion.""",
 
-    4: """Prepare a research report on the impact of Artificial Intelligence in healthcare. Include an introduction, literature review, major applications, benefits, challenges, future trends, and references."""
+    4: """Prepare a research report on the impact of Artificial Intelligence in healthcare. Include an introduction, literature review, major applications, benefits, challenges, future trends, and references.""",
+
+    5: """Please help me summarise my uploaded file"""
 }
 
 
 data = dict(
-    request = prompts[1]
+    request = prompts[5]
 )
 
 response = requests.post("http://127.0.0.1:8000/agent/", json = data)
