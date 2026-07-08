@@ -16,17 +16,17 @@ vector_store = Chroma(
     embedding_function = embeddings,
 )
 
-while True:
-    user_prompt = input("Prompt (type 'q' to quit):")
-    if user_prompt.strip() == "q":
-        break
-
-    results = vector_store.similarity_search(
-        user_prompt,
-        k = 5
-    )
-
-    for i, doc in enumerate(results, 1):
-        print(f"Result: {i}")
-        print(doc.page_content)
-        print(" ")
+# while True:
+#     user_prompt = input("Prompt (type 'q' to quit):")
+#     if user_prompt.strip() == "q":
+#         break
+#
+#     results = vector_store.similarity_search(
+#         user_prompt,
+#         k = 5
+#     )
+#
+#     for i, doc in enumerate(results, 1):
+#         print(f"Result: {i}")
+#         print(doc.page_content)
+#         print(" ")

@@ -90,6 +90,8 @@ def save_doc() -> str:
     :return: confirmation
     """
     global GLOBAL_DOC
+    if os.path.exists(DOC_PATH):
+        os.remove(DOC_PATH)
     GLOBAL_DOC.save(DOC_PATH)
     return "Doc saved!"
 
