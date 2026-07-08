@@ -1,0 +1,16 @@
+[project]
+name = "docbuilder"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "ipykernel>=7.3.0",
+    "langchain>=1.3.11",
+    "langchain-groq>=1.1.3",
+    "langgraph>=1.2.8",
+    "numpy>=2.5.1",
+    "pandas>=3.0.3",
+    "python-docx>=1.2.0",
+]

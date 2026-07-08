@@ -1,0 +1,7 @@
+numpy
+pandas
+langchain
+langgraph
+langchain_groq
+dotenv
+python-docx
