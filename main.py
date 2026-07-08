@@ -12,7 +12,7 @@ prompts = {
     4: """Prepare a research report on the impact of Artificial Intelligence in healthcare. Include an introduction, literature review, major applications, benefits, challenges, future trends, and references."""
 }
 
-user_input = prompts[2]
+user_input = prompts[1]
 
 try:
     app.invoke(dict(

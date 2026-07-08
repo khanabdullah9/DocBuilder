@@ -11,6 +11,8 @@ def invoke_agent(prompt: str) -> int:
     return response.status_code
 
 
+st.header("Agentic Document Builder")
+
 uploaded_file = st.file_uploader("Choose a file")
 if uploaded_file is not None:
     save_path = os.path.join("uploaded_files", uploaded_file.name)

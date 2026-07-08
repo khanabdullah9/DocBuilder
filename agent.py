@@ -32,11 +32,6 @@ class AgentState(TypedDict):
     ]
 
 def create_todo(state: AgentState) -> AgentState:
-    """
-    Calls the LLM to generate a todo list
-    :param state: AgentState
-    :return: AgentState
-    """
     example_prompt, example_response = get_sample_prompt_response()
     sys_msg = SystemMessage(content = f"""
         You are a helpful assistant!
@@ -79,9 +74,10 @@ def generate_doc(state: AgentState) -> AgentState:
             write_bullet_points: add bullet points in the document
             write_ordered_list: add order points in the document
             invoke_rag: if the user has uploaded a PDF file then call this tool and retrieve the context
-            save_doc: save the doc
+            save_doc: save the doc (Give the file a name. Every new file gets a new name. Valid file ext: .docx)
         Never call any other tool.
         Read the instructions, generate content and call the appropriate tool
+        You will be given the header, sub-headers and then the instructions to generate the content for the sub-headers.
 
         Do not search the web for any data, just answer with your knowledge.
 

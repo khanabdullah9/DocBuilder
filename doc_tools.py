@@ -1,5 +1,6 @@
 import os
 from typing import Tuple, List
+import numpy as np
 
 from langchain_core.tools import tool
 from docx import Document
@@ -84,15 +85,21 @@ def write_ordered_list(points: List[str]) -> str:
     return "bullet points added!"
 
 @tool
-def save_doc() -> str:
+def save_doc(file_name: str) -> str:
     """
     Saves the document
+    :param file_name: file name
     :return: confirmation
     """
     global GLOBAL_DOC
-    if os.path.exists(DOC_PATH):
-        os.remove(DOC_PATH)
-    GLOBAL_DOC.save(DOC_PATH)
+
+    if file_name and not file_name.endswith(".docx"):
+        file_name = file_name+".docx"
+    if not file_name:
+        file_name = f"file_{str(np.random.randint(1,10_000))}.docx"
+
+    GLOBAL_DOC.save(os.path.join("generated",file_name))
+    GLOBAL_DOC = Document() # resetting the document to get fresh content
     return "Doc saved!"
 
 @tool

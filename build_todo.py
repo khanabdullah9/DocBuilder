@@ -28,7 +28,7 @@ def write_markdown(content: str) -> str:
         :param content: LLM generated content
         :return: str
         """
-    with open("TODO.md", "w") as md:
+    with open(os.path.join("task","TODO.md"), "w") as md:
         md.write(content)
 
     return "content written!"
@@ -92,7 +92,7 @@ graph.add_edge("tool_node", END)
 app = graph.compile()
 
 user_input = """
-We are planning an Agentic AI project that builds word documents based on plain human prompts. The app will take user prompt, this prompt will be sent to LLMs that will generate the task (for subsequent LLM) and finally create the word doc. Please help us create a word doc for this
+Generate meeting minutes for a weekly software development team meeting discussing sprint progress, completed tasks, blockers, action items, and deadlines.
 """
 
 try:
