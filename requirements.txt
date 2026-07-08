@@ -5,3 +5,10 @@ langgraph
 langchain_groq
 dotenv
 python-docx
+langchain-chroma
+langchain-huggingface
+huggingface_hub
+langchain-community
+langchain-text-splitters
+fastapi
+fastapi[standard]
