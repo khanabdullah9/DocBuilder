@@ -9,6 +9,8 @@ from langgraph.graph.message import add_messages
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode
 
+from utils import get_sample_prompt_response
+
 load_dotenv()
 API_KEY = os.getenv("GROQ_API_KEY")
 
@@ -39,13 +41,25 @@ class AgentState(TypedDict):
     ]
 
 def model_call(state: AgentState) -> AgentState:
-    sys_msg = SystemMessage(content = """
+    example_prompt, example_response = get_sample_prompt_response()
+    sys_msg = SystemMessage(content = f"""
         You are a helpful assistant!
         You are supposed to create a todo plan for another LLM agent to follow and create a word doc based on the user prompt.
         You and the other agent will receive the same user prompt
         
         You have one tool: write_markdown
         Never call any other tool
+        
+        Other agent has these tools: read_markdown, write_content, write_paragraph, write_bullet_points, write_ordered_list, write_table, save_doc
+            write_paragraph: write only paragraph to the document
+            write_bullet_points: add bullet points in the document
+            write_ordered_list: add order points in the document
+            write_table: add a table in the document
+            save_doc: save the doc
+        You are supposed to give instructions to the agent when to call which tool      
+        
+        example prompt: {example_prompt}
+        example response: {example_response}
         
         Do not search the web for any data, just answer with your knowledge.
         
